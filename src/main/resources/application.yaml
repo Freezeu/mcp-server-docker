@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: mcp-server-docker
+
+docker:
+  host: "tcp://localhost:2375"

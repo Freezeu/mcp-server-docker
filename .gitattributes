@@ -1,0 +1,54 @@
+/mvnw text eol=lf
+*.cmd text eol=crlf
+# ========== 跨平台换行符统一 ==========
+# 所有文本文件统一使用 LF 换行符
+* text=auto eol=lf
+
+# Windows 脚本使用 CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Shell 脚本使用 LF
+*.sh text eol=lf
+
+# ========== 文本类型 ==========
+*.java text
+*.xml text
+*.properties text
+*.gradle text
+*.md text
+*.txt text
+*.yml text
+*.yaml text
+*.json text
+
+# ========== 二进制文件标记（防止 Git 误处理） ==========
+*.jar binary
+*.war binary
+*.ear binary
+*.class binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+
+# ========== GitHub 语言统计优化 ==========
+# 忽略 IDE 配置文件、编译输出、构建产物
+/.idea/** linguist-vendored
+/build/** linguist-vendored
+/target/** linguist-vendored
+/out/** linguist-vendored
+
+# ========== 合并冲突自动策略（锁文件/配置类） ==========
+# （可选）Maven/Gradle 的 wrapper 脚本不易冲突处理
+# maven-wrapper.properties merge=ours
+
+# ========== 导出归档时忽略 ==========
+.gitattributes export-ignore
+.gitignore export-ignore
+README.md export-ignore
+LICENSE export-ignore
+*.iml export-ignore
+.idea/ export-ignore

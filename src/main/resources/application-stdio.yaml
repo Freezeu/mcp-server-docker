@@ -1,0 +1,14 @@
+spring:
+  ai:
+    mcp:
+      server:
+        stdio:
+          true
+  # avoid claude desktop errors
+  main:
+    banner-mode: off
+    web-application-type: none
+# avoid claude desktop errors
+logging:
+  pattern:
+    console:
