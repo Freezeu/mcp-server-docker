@@ -48,14 +48,14 @@ automation and interaction capabilities for developers and tools.
     - `container_id`: Container ID (string, required)
   - **start_container** - Start a container ✅
     - `container_id`: Container ID (string, required)
+  - **restart_container** - Restart a container ✅
+    - `container_id`: Container ID (string, required)
   - **stop_container** - Stop a container ✅
     - `container_id`: Container ID (string, required)
   - **remove_container** - Remove a container ✅
     - `container_id`: Container ID (string, required)
 
   - create_container
-  - restart_container
-  - Create, start, stop, restart, and remove containers
   - Batch container operations management
   - Container health status monitoring
 

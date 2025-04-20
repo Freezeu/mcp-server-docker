@@ -1,6 +1,7 @@
 spring:
   application:
     name: mcp-server-docker
-
+  profiles:
+    active: sse
 docker:
   host: "tcp://localhost:2375"

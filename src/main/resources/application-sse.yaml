@@ -11,14 +11,14 @@ server:
   port: 19988
 
 logging:
-#  level:
-#    io:
-#      modelcontextprotocol:
-#        client:
-#          DEBUG
-#        server:
-#          DEBUG
-#        spec:
-#          DEBUG
+  level:
+    io:
+      modelcontextprotocol:
+        client:
+          DEBUG
+        server:
+          DEBUG
+        spec:
+          DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
