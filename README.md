@@ -42,7 +42,7 @@ automation and interaction capabilities for developers and tools.
 ## Tools
 ✅ **Completed**  🛠️ **In Progress**  ❌ **Plan**  
 
-### Container Lifecycle Management 🛠️
+### Container Lifecycle Management ✅
   - **list_containers** - Get the list of containers ✅
   - **get_container_info** - Get details of a specific container ✅
     - `container_id`: Container ID (string, required)
@@ -54,25 +54,55 @@ automation and interaction capabilities for developers and tools.
     - `container_id`: Container ID (string, required)
   - **remove_container** - Remove a container ✅
     - `container_id`: Container ID (string, required)
+  - **create_container** - Create a new container ✅
+    - `imageName`: Image name (string, required)
+    - `containerName`: Container name (string, required)
+    - `command`: Command to run (string, optional)
+    - `env`: Environment variables (string[], optional)
+    - `ports`: Port bindings (string[], optional)
+    - `volumes`: Volume bindings (string[], optional)
+    - `network`: Network name (string, optional)
+    - `restartPolicy`: Restart policy (string, optional)
 
-  - create_container
-  - Batch container operations management
-  - Container health status monitoring
+### Network Management ✅
+  - **list_networks** - List all networks ✅
+  - **get_network_info** - Get network information ✅
+    - `networkId`: Network ID (string, required)
+  - **create_network** - Create a new network ✅
+    - `networkName`: Network name (string, required)
+    - `driver`: Network driver (string, required)
+    - `subnet`: Subnet CIDR (string, required)
+    - `gateway`: Gateway IP (string, required)
+  - **connect_container_to_network** - Connect container to network ✅
+    - `containerId`: Container ID (string, required)
+    - `networkId`: Network ID (string, required)
+  - **disconnect_container_from_network** - Disconnect container from network ✅
+    - `containerId`: Container ID (string, required)
+    - `networkId`: Network ID (string, required)
+  - **remove_network** - Remove a network ✅
+    - `networkId`: Network ID (string, required)
+  - **get_network_containers** - Get containers in a network ✅
+    - `networkId`: Network ID (string, required)
 
-### Image Management❌
-  - Image pull, push, build, and removal
-  - Image version control and tag management
-  - Custom image registry integration
-
-### Network Management❌
-  - Create and manage Docker networks
-  - Network connection configuration
-  - Port mapping management
-
-### Volume Management❌
-  - Create, mount, and remove data volumes
-  - Data volume permission management
-  - Data volume backup and recovery
+### Image Management ✅
+  - **list_images** - List all images ✅
+  - **pull_image** - Pull an image from registry ✅
+    - `imageName`: Image name with tag (string, required)
+  - **push_image** - Push an image to registry ✅
+    - `imageName`: Image name with tag (string, required)
+  - **remove_image** - Remove an image ✅
+    - `imageId`: Image ID (string, required)
+    - `force`: Force removal (boolean, optional)
+  - **tag_image** - Tag an image with multiple tags ✅
+    - `imageId`: Image ID (string, required)
+    - `repository`: Repository name (string, required)
+    - `tags`: Array of tags (string[], required)
+  - **build_image** - Build an image from Dockerfile ✅
+    - `dockerfilePath`: Path to Dockerfile (string, required)
+    - `repository`: Repository name (string, required)
+    - `tags`: Array of tags (string[], required)
+  - **get_image_details** - Get image details ✅
+    - `imageId`: Image ID (string, required)
 
 ## FAQ
 
