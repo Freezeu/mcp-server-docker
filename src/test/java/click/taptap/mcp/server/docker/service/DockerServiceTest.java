@@ -25,7 +25,7 @@ class DockerServiceTest {
         assertDoesNotThrow(() -> {
             var networks = dockerService.list_networks();
             if (!networks.isEmpty()) {
-                var network = dockerService.get_network_info(networks.get(0).getId());
+                var network = dockerService.get_network_info(networks.getFirst().getId());
                 assertNotNull(network);
             }
         });
@@ -68,7 +68,7 @@ class DockerServiceTest {
             var images = dockerService.list_images();
             if (!images.isEmpty()) {
                 String result = dockerService.tag_image(
-                    images.get(0).getId(),
+                    images.getFirst().getId(),
                     "test-repo",
                     new String[]{"test-tag"}
                 );
@@ -94,7 +94,7 @@ class DockerServiceTest {
         assertDoesNotThrow(() -> {
             var images = dockerService.list_images();
             if (!images.isEmpty()) {
-                var details = dockerService.get_image_details(images.get(0).getId());
+                var details = dockerService.get_image_details(images.getFirst().getId());
                 assertNotNull(details);
             }
         });
@@ -105,9 +105,21 @@ class DockerServiceTest {
         assertDoesNotThrow(() -> {
             var images = dockerService.list_images();
             if (!images.isEmpty()) {
-                String result = dockerService.remove_image(images.get(0).getId(), false);
+                String result = dockerService.remove_image(images.getFirst().getId(), false);
                 assertTrue(result.contains("successfully"));
             }
         });
     }
-} 
+
+    @Test
+    void get_container_logs() {
+        assertDoesNotThrow(() -> {
+            var containers = dockerService.list_containers();
+            if (!containers.isEmpty()) {
+                var logs = dockerService.get_container_logs(containers.getFirst().getId(), false, true, null, null, null);
+                System.out.println(logs);
+                assertNotNull(logs);
+            }
+        });
+    }
+}

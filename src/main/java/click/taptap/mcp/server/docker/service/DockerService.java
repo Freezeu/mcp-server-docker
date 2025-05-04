@@ -64,18 +64,16 @@ public class DockerService {
     }
 
     @Tool(description = "Create a new container")
-    public CreateContainerResponse create_container(
-            @ToolParam(description = "imageName") String imageName,
-            @ToolParam(description = "containerName") String containerName,
-            @ToolParam(description = "command", required = false) String command,
-            @ToolParam(description = "environment variables", required = false) String[] env,
-            @ToolParam(description = "port bindings", required = false) String[] ports,
-            @ToolParam(description = "volume bindings", required = false) String[] volumes,
-            @ToolParam(description = "network", required = false) String network,
-            @ToolParam(description = "restart policy", required = false) String restartPolicy) {
-        
-        CreateContainerCmd createContainerCmd = dockerClient.createContainerCmd(imageName)
-                .withName(containerName);
+    public CreateContainerResponse create_container(@ToolParam(description = "imageName") String imageName,
+        @ToolParam(description = "containerName") String containerName,
+        @ToolParam(description = "command", required = false) String command,
+        @ToolParam(description = "environment variables", required = false) String[] env,
+        @ToolParam(description = "port bindings", required = false) String[] ports,
+        @ToolParam(description = "volume bindings", required = false) String[] volumes,
+        @ToolParam(description = "network", required = false) String network,
+        @ToolParam(description = "restart policy", required = false) String restartPolicy) {
+
+        CreateContainerCmd createContainerCmd = dockerClient.createContainerCmd(imageName).withName(containerName);
 
         // 设置命令
         if (StringUtils.isNotBlank(command)) {
@@ -93,10 +91,8 @@ public class DockerService {
             for (String port : ports) {
                 String[] parts = port.split(":");
                 if (parts.length == 2) {
-                    portBindings.add(new PortBinding(
-                            Ports.Binding.bindPort(Integer.parseInt(parts[1])),
-                            ExposedPort.tcp(Integer.parseInt(parts[0]))
-                    ));
+                    portBindings.add(new PortBinding(Ports.Binding.bindPort(Integer.parseInt(parts[1])),
+                        ExposedPort.tcp(Integer.parseInt(parts[0]))));
                 }
             }
             createContainerCmd.withHostConfig(new HostConfig().withPortBindings(portBindings));
@@ -108,10 +104,7 @@ public class DockerService {
             for (String volume : volumes) {
                 String[] parts = volume.split(":");
                 if (parts.length == 2) {
-                    mounts.add(new Mount()
-                            .withType(MountType.BIND)
-                            .withSource(parts[0])
-                            .withTarget(parts[1]));
+                    mounts.add(new Mount().withType(MountType.BIND).withSource(parts[0]).withTarget(parts[1]));
                 }
             }
             createContainerCmd.withHostConfig(new HostConfig().withMounts(mounts));
@@ -124,8 +117,7 @@ public class DockerService {
 
         // 设置重启策略
         if (StringUtils.isNotBlank(restartPolicy)) {
-            createContainerCmd.withHostConfig(new HostConfig()
-                    .withRestartPolicy(RestartPolicy.parse(restartPolicy)));
+            createContainerCmd.withHostConfig(new HostConfig().withRestartPolicy(RestartPolicy.parse(restartPolicy)));
         }
 
         return createContainerCmd.exec();
@@ -145,40 +137,27 @@ public class DockerService {
 
     @Tool(description = "Create a new network")
     public CreateNetworkResponse create_network(@ToolParam(description = "networkName") String networkName,
-                               @ToolParam(description = "driver") String driver,
-                               @ToolParam(description = "subnet", required = false) String subnet,
-                               @ToolParam(description = "gateway", required = false) String gateway) {
+        @ToolParam(description = "driver") String driver,
+        @ToolParam(description = "subnet", required = false) String subnet,
+        @ToolParam(description = "gateway", required = false) String gateway) {
         Network.Ipam ipam = null;
         if (StringUtils.isNotBlank(subnet)) {
-            ipam = new Network.Ipam()
-                    .withConfig(new Network.Ipam.Config()
-                            .withSubnet(subnet)
-                            .withGateway(gateway));
+            ipam = new Network.Ipam().withConfig(new Network.Ipam.Config().withSubnet(subnet).withGateway(gateway));
         }
-        return dockerClient.createNetworkCmd()
-                .withName(networkName)
-                .withDriver(driver)
-                .withIpam(ipam)
-                .exec();
+        return dockerClient.createNetworkCmd().withName(networkName).withDriver(driver).withIpam(ipam).exec();
     }
 
     @Tool(description = "Connect a container to a network")
     public String connect_container_to_network(@ToolParam(description = "containerId") String containerId,
-                                             @ToolParam(description = "networkId") String networkId) {
-        dockerClient.connectToNetworkCmd()
-                .withContainerId(containerId)
-                .withNetworkId(networkId)
-                .exec();
+        @ToolParam(description = "networkId") String networkId) {
+        dockerClient.connectToNetworkCmd().withContainerId(containerId).withNetworkId(networkId).exec();
         return "Container connected to network successfully";
     }
 
     @Tool(description = "Disconnect a container from a network")
     public String disconnect_container_from_network(@ToolParam(description = "containerId") String containerId,
-                                                  @ToolParam(description = "networkId") String networkId) {
-        dockerClient.disconnectFromNetworkCmd()
-                .withContainerId(containerId)
-                .withNetworkId(networkId)
-                .exec();
+        @ToolParam(description = "networkId") String networkId) {
+        dockerClient.disconnectFromNetworkCmd().withContainerId(containerId).withNetworkId(networkId).exec();
         return "Container disconnected from network successfully";
     }
 
@@ -204,9 +183,8 @@ public class DockerService {
     @Tool(description = "Pull an image from registry")
     public String pull_image(@ToolParam(description = "imageName") String imageName) {
         try {
-            ResultCallback.Adapter<PullResponseItem> res = dockerClient.pullImageCmd(imageName)
-                    .start()
-                    .awaitCompletion();
+            ResultCallback.Adapter<PullResponseItem> res =
+                dockerClient.pullImageCmd(imageName).start().awaitCompletion();
             return res.toString();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -217,9 +195,7 @@ public class DockerService {
     @Tool(description = "Push an image to registry")
     public String push_image(@ToolParam(description = "imageName") String imageName) {
         try {
-            dockerClient.pushImageCmd(imageName)
-                    .start()
-                    .awaitCompletion();
+            dockerClient.pushImageCmd(imageName).start().awaitCompletion();
             return "Image pushed successfully: " + imageName;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -229,17 +205,15 @@ public class DockerService {
 
     @Tool(description = "Remove an image")
     public String remove_image(@ToolParam(description = "imageId") String imageId,
-                             @ToolParam(description = "force", required = false) boolean force) {
-        dockerClient.removeImageCmd(imageId)
-                .withForce(force)
-                .exec();
+        @ToolParam(description = "force", required = false) boolean force) {
+        dockerClient.removeImageCmd(imageId).withForce(force).exec();
         return "Image removed successfully: " + imageId;
     }
 
     @Tool(description = "Tag an image with multiple tags")
     public String tag_image(@ToolParam(description = "imageId") String imageId,
-                          @ToolParam(description = "repository") String repository,
-                          @ToolParam(description = "tags, e.g. ['latest','1.0.0']") String[] tags) {
+        @ToolParam(description = "repository") String repository,
+        @ToolParam(description = "tags, e.g. ['latest','1.0.0']") String[] tags) {
         StringBuilder result = new StringBuilder();
         for (String tag : tags) {
             dockerClient.tagImageCmd(imageId, repository, tag).exec();
@@ -250,8 +224,8 @@ public class DockerService {
 
     @Tool(description = "Build an image from Dockerfile with multiple tags")
     public String build_image(@ToolParam(description = "dockerfilePath") String dockerfilePath,
-                            @ToolParam(description = "repository") String repository,
-                            @ToolParam(description = "tags, e.g. ['latest','1.0.0']") String[] tags) {
+        @ToolParam(description = "repository") String repository,
+        @ToolParam(description = "tags, e.g. ['latest','1.0.0']") String[] tags) {
         try {
             // 创建标签列表
             Set<String> tagSet = new HashSet<>();
@@ -260,13 +234,13 @@ public class DockerService {
             }
 
             // 构建镜像
-            dockerClient.buildImageCmd()
-                    .withDockerfile(new File(dockerfilePath))
-                    .withTags(tagSet)  // 使用withTags替代withTag
-                    .withPull(true)    // 自动拉取基础镜像
-                    .withNoCache(false) // 使用缓存以提高构建速度
-                    .start()
-                    .awaitCompletion();
+            dockerClient.buildImageCmd().withDockerfile(new File(dockerfilePath))
+                // 使用withTags替代withTag
+                .withTags(tagSet)
+                // 自动拉取基础镜像
+                .withPull(true)
+                // 使用缓存以提高构建速度
+                .withNoCache(false).start().awaitCompletion();
 
             return "Image built successfully with tags: " + String.join(", ", tagSet);
         } catch (InterruptedException e) {
@@ -275,9 +249,34 @@ public class DockerService {
         }
     }
 
-
     @Tool(description = "Get image details")
-    public InspectImageResponse get_image_details(@ToolParam(description = "imageId") String imageId) {
-        return dockerClient.inspectImageCmd(imageId).exec();
+    public String get_image_details(@ToolParam(description = "imageId") String imageId) {
+        return dockerClient.inspectImageCmd(imageId).exec().toString();
     }
+
+    // ==================== Log Management ====================
+    @Tool(description = "Get container logs")
+    public String get_container_logs(@ToolParam(description = "containerId") String containerId,
+        @ToolParam(description = "Includes stdout logs if set to true") Boolean stdout,
+        @ToolParam(description = "Includes stderr logs if set to true") Boolean stderr,
+        @ToolParam(description = "Fetches the last N lines of logs if set (e.g., 100)", required = false) Integer tail,
+        @ToolParam(description = "Fetches logs up to the specified Unix timestamp (seconds); excludes later entries",
+            required = false) Integer until,
+        @ToolParam(description = "Fetches logs from the given timestamp onward; excludes earlier entries",
+            required = false) Integer since) throws InterruptedException {
+
+        LogContainerCmd logContainerCmd = dockerClient.logContainerCmd(containerId)
+            .withStdOut(stdout).withStdErr(stderr).withSince(since).withUntil(until).withTail(tail).withFollowStream(false);
+
+        StringBuilder logBuilder = new StringBuilder();
+        logContainerCmd.exec(new ResultCallback.Adapter<Frame>() {
+            @Override
+            public void onNext(Frame frame) {
+                logBuilder.append(new String(frame.getPayload()));
+            }
+        }).awaitCompletion();
+        return logBuilder.toString();
+    }
+
+
 }

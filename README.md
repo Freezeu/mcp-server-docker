@@ -106,7 +106,16 @@ automation and interaction capabilities for developers and tools.
     - `tags`: Array of tags (string[], required)
   - **get_image_details** - Get image details ✅
     - `imageId`: Image ID (string, required)
-
+### Logs Management ✅
+  - **get_container_logs** - Get container logs ✅
+    - `containerId`: Container ID (string, required)
+    - `follow`: Follow log output (boolean, optional, default: false)
+    - `stdout`: Show stdout (boolean, optional, default: true)
+    - `stderr`: Show stderr (boolean, optional, default: true)
+    - `since`: Show logs since timestamp (string, optional)
+    - `until`: Show logs until timestamp (string, optional)
+    - `tail`: Number of lines to show from the end (integer, optional)
+    - `timestamps`: Show timestamps (boolean, optional, default: false)
 ## FAQ
 
 ### Q: How do I install the project?
