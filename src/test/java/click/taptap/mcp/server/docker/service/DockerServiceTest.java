@@ -35,13 +35,14 @@ class DockerServiceTest {
     void testCreateNetwork() {
         assertDoesNotThrow(() -> {
             var response = dockerService.create_network(
-                "test-network",
-                "bridge",
-                "172.20.0.0/16",
-                "172.20.0.1"
+                    "test-network",
+                    "bridge",
+                    null,
+                    null
             );
             assertNotNull(response);
             assertNotNull(response.getId());
+            dockerService.remove_network(response.getId());
         });
     }
 

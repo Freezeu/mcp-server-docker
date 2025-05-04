@@ -6,6 +6,7 @@ import click.taptap.mcp.server.docker.vo.NetworkInfoVO;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONUtil;
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.async.ResultCallback;
 import com.github.dockerjava.api.command.*;
 import com.github.dockerjava.api.model.*;
 import lombok.RequiredArgsConstructor;
@@ -145,15 +146,19 @@ public class DockerService {
     @Tool(description = "Create a new network")
     public CreateNetworkResponse create_network(@ToolParam(description = "networkName") String networkName,
                                @ToolParam(description = "driver") String driver,
-                               @ToolParam(description = "subnet") String subnet,
-                               @ToolParam(description = "gateway") String gateway) {
+                               @ToolParam(description = "subnet", required = false) String subnet,
+                               @ToolParam(description = "gateway", required = false) String gateway) {
+        Network.Ipam ipam = null;
+        if (StringUtils.isNotBlank(subnet)) {
+            ipam = new Network.Ipam()
+                    .withConfig(new Network.Ipam.Config()
+                            .withSubnet(subnet)
+                            .withGateway(gateway));
+        }
         return dockerClient.createNetworkCmd()
                 .withName(networkName)
                 .withDriver(driver)
-                .withIpam(new Network.Ipam()
-                        .withConfig(new Network.Ipam.Config()
-                                .withSubnet(subnet)
-                                .withGateway(gateway)))
+                .withIpam(ipam)
                 .exec();
     }
 
@@ -199,10 +204,10 @@ public class DockerService {
     @Tool(description = "Pull an image from registry")
     public String pull_image(@ToolParam(description = "imageName") String imageName) {
         try {
-            dockerClient.pullImageCmd(imageName)
+            ResultCallback.Adapter<PullResponseItem> res = dockerClient.pullImageCmd(imageName)
                     .start()
                     .awaitCompletion();
-            return "Image pulled successfully: " + imageName;
+            return res.toString();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             return "Failed to pull image: " + e.getMessage();
