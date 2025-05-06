@@ -4,9 +4,11 @@ The Docker MCP Server is a [Model Context Protocol (MCP)](https://modelcontextpr
 server that provides seamless integration with Docker Desktop on Windows, enabling advanced
 automation and interaction capabilities for developers and tools.
 
-<a href="https://glama.ai/mcp/servers/@Freezeu/mcp-server-docker">
-  <img width="380" height="200" src="https://glama.ai/mcp/servers/@Freezeu/mcp-server-docker/badge" />
-</a>
+<div align="center">
+  <a href="https://glama.ai/mcp/servers/@nideil/mcp-server-docker">
+    <img width="380" height="200" src="https://glama.ai/mcp/servers/@nideil/mcp-server-docker/badge" />
+  </a>
+</div>
 
 ## Prerequisites
 
